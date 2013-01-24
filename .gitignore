@@ -39,3 +39,9 @@ python_env/
 
 # Sublime workspace files
 *.sublime-workspace
+
+# Generated plots and write-ups
+*.aux
+*.log
+*.pdf
+*.png

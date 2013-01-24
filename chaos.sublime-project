@@ -3,7 +3,8 @@
 	[
 		{
 			"path": ".",
-			"folder_exclude_patterns": ["python_env"]
+			"folder_exclude_patterns": ["python_env"],
+			"file_exclude_patterns": ["*.png", "*.aux", "*.log", "*.pdf"]
 		}
 	],
 	"settings":

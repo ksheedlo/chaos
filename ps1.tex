@@ -1,0 +1,107 @@
+\documentclass[12pt, letterpaper]{article}
+\title{Problem Set 1: Logistic Map}
+\author{Ken Sheedlo}
+\usepackage[pdftex]{graphicx}
+\usepackage{fullpage}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+\maketitle{}
+
+\section*{Fixed Point Behavior}
+
+For $R < 3$, the logistic map converges to a fixed point. In the time domain,
+the plot approaches a horizontal line from both sides. In the first return map
+domain, points on the plot approach the line at $x_{n+1} = x_n$. Figure 1 shows
+the logistic map in the time domain and first return map space. I used $R = 2.9, 
+x_0 = 0.2$. 
+
+\begin{minipage}[t]{0.5\textwidth}
+\begin{center}
+\includegraphics[scale=0.55]{log_fixed_time_cropped.png}
+\end{center}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{center}
+\includegraphics[scale=0.55]{log_fixed_ret1_cropped.png}
+\end{center}
+\end{minipage}
+\begin{center}
+Figure 1: Fixed point behavior in the logistic map system.
+\\
+\end{center}
+
+This demonstrates the behavior of the logistic map for $1 < R < 3$, which tends
+toward a constant steady state.
+
+\section*{Oscillating Behavior}
+
+For $3 \leq R < 4$, the logistic map approaches a condition where it oscillates 
+between two or more states. Plotting these reveals some interesting dynamics. 
+Figure 2 shows the map in the time domain as well as the first and second return
+map spaces using $R = 3.0, x_0 = 0.2$.
+
+\begin{minipage}[t]{0.5\textwidth}
+\begin{center}
+\includegraphics[scale=0.55]{log_osc_time_cropped.png}
+\includegraphics[scale=0.55]{log_osc_ret2_cropped.png}
+\end{center}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{center}
+\includegraphics[scale=0.55]{log_osc_ret1_cropped.png}
+\end{center}
+\end{minipage}
+\begin{center}
+Figure 2: Oscillating behavior in the logistic map system.
+\\
+\end{center}
+
+In the time domain, we see points on the plot approaching each other but 
+remaining some distance apart. They will not meet in the middle as they did in
+the same plot above for $R = 2.9$. At $R = 3.0$, the map demonstrates
+oscillating behavior and will not converge on a point. Interestingly, this means
+that the first and second return map spaces do not converge on a point either. 
+The first return map space traces out points along a parabola and eventually 
+oscillates between two of those points. There is a gap between the points where
+the map does not go. Similarly, the second return map traces out points along a
+fourth degree polynomial, but it also oscillates between two points and leaves a
+gap rather than converging to a point. Oscillating behavior is evident in each
+one of the three spaces.
+
+\section*{Chaotic Divergence}
+
+For certain values of $R$ between 3 and 4, the map becomes chaotic. This can be
+demonstrated by changing $x_0$ slightly and watching where the plot goes. 
+Figure 3 demonstrates chaotic behavior in the logistic map for $R = 3.9$.
+
+\begin{center}
+\includegraphics[scale=0.6]{log_chaotic_offset.png}
+\\
+Figure 3: Chaotic behavior.
+\\
+\end{center}
+
+This is chaotic behavior because although the inputs varied only slightly, the
+outcomes differed wildly. Of particular interest are the first ten or so data
+points where the lines are almost exactly parallel before they diverge.
+
+\section*{Further Analysis}
+
+Using my program to evaluate various interesting $R$, I could not find evidence 
+for chaos or any interesting structure at $R = 2$ or $R = 3.3$. At $R = 3.6$, I 
+found chaotic behavior as well as an interesting oscillatory structure. It 
+appears to be oscillating through a series of four states. At $R = 3.83$, I 
+found more interesting oscillatory structure as well as evidence for chaos. The
+sequences for $x_0 = 0.2$ and $x_0 = 0.2001$ diverged chaotically at first, but
+converged back on the same steady state. At $R > 4$, the map quickly converges
+to 0 and does not show evidence for chaotic behavior.
+
+At $R = 2.5$, the system quickly converges to a fixed point at about 0.6
+regardless of $x_0$. The fixed point is an attractor, and we say that the set of
+initial conditions that converges to the attractor is a basin of attraction.
+
+\end{document}
