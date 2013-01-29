@@ -13,5 +13,7 @@ virtualenv python_env
 
 pip install numpy==1.6.2
 check
+pip install matplotlib==1.2.0
+check
 pip install wsgiref==0.1.2
 check

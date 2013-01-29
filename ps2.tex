@@ -1,0 +1,96 @@
+\documentclass[12pt, letterpaper]{article}
+\title{Problem Set 2: Bifurcation Diagrams}
+\author{Ken Sheedlo}
+\usepackage[pdftex]{graphicx}
+\usepackage{fullpage}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+\maketitle{}
+
+\section*{Bifurcation Plot of the Logistic Map}
+
+I wrote a program to draw the bifurcation plot of the logistic map for $2.8 < R
+< 4$. I used $x_0 = 0.5$ and computed 1200 iterations of the map. I discarded 
+the first 800 points from each run of the map. The interval between successive 
+$R$ values is 0.001. Results are shown in Figure 1.
+
+\begin{center}
+\includegraphics[scale=0.6]{bifurc.png}
+\\
+Figure 1: Bifurcation plot of the logistic map.
+\end{center}
+
+\section*{Period Doubling Analysis}
+
+I added a routine to my program to detect bifurcation points. I found 
+bifurcation points at $R$-values 3.000, 3.448, 3.544, 3.564, and 3.568, as well 
+as higher values in between chaotic sections. Using $b_1, b_2, ...,b_n$ to denote
+bifurcation points on the same cascade, the Feigenbaum number $F$ can be 
+approximated as
+
+\begin{equation}
+F = \frac{b_{k+1}-b_k}{b_{k+2}-b_{k+1}}
+\end{equation}
+
+where $k$ is an integer $1 \leq k \leq n$. Using Equation 1 and results from 
+the program, I was able to estimate the Feigenbaum number experimentally. 
+Results are shown in Table 2.
+
+\begin{center}
+\begin{tabular}{c | c | c | c | c}
+$n$ & $b_n$ & $b_{n+1}$ & $b_{n+2}$ & Approx. $F$ \\ \hline
+1 & 3.000 & 3.448 & 3.544 & 4.667 \\
+2 & 3.448 & 3.544 & 3.564 & 4.800 \\
+3 & 3.544 & 3.564 & 3.568 & 5.000 
+\end{tabular}
+\\
+\vspace{1.0em}
+Table 2: Estimating the Feigenbaum number experimentally.
+\end{center}
+
+The actual value of $F$ is 4.667. Note how the estimate actually diverges from the 
+actual value as we take estimates further down the cascade. This is probably 
+because as gaps between bifurcations get smaller and smaller, higher resolution is 
+needed to sample them. Three digits is enough precision for the first estimate, but 
+the other estimates could probably be improved by decreasing the interval between
+successive $R$ values.
+
+\section*{Period Doubling in the Henon Map}
+
+Figure 3 shows a bifurcation plot of the Henon map with $b = 0.3$ and $0 < a < 
+1.4$. 
+
+\begin{center}
+\includegraphics[scale=0.6]{henon_bifurc.png}
+\\
+Figure 3: Bifurcation plot of the Henon map.
+\end{center}
+
+I found a series of bifurcations at $a$-values 0.368, 0.909, 1.024, 1.051, and 
+1.056. I also found a higher series at 1.226, 1.254, and 1.260, above a region 
+of chaotic behavior. Table 4 shows estimates of $F$ produced from the data.
+
+\begin{center}
+\begin{tabular}{c | c | c | c | c}
+$n$ & $b_n$ & $b_{n+1}$ & $b_{n+2}$ & Approx. $F$ \\ \hline
+1 & 0.368 & 0.909 & 1.024 & 4.704 \\
+2 & 0.909 & 1.024 & 1.051 & 4.259 \\
+3 & 1.024 & 1.051 & 1.056 & 5.400 \\
+6 & 1.226 & 1.254 & 1.260 & 4.667
+\end{tabular}
+\\
+\vspace{1.0em}
+Table 4: Estimating the Feigenbaum number using the Henon map.
+\end{center}
+
+The results from the Henon map are quite similar to those from the logistic map.
+This is not surprising, as the Feigenbaum number holds for any 1D map with a 
+quadratic maximum, including both the logistic and Henon maps. We should get
+similar results. Of particular interest is the higher period doubling cascade 
+which approximates the Feigenbaum number to three decimal places.
+
+\end{document}
