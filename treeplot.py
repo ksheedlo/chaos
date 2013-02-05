@@ -24,8 +24,9 @@ def render(x_start=1.0, y_start=0.5, size=1.0, iterations=13, **kwargs):
     Draws a neat fractal tree. 
 
     '''
-    opts, plot_args = split_dict(('title', 'filename'), kwargs)
+    opts, plot_args = split_dict(('title', 'filename', 'ratio'), kwargs)
     render_color = opts.get('color', 'k')
+    ratio = opts.get('ratio', 0.6)
     figure = matplotlib.pyplot.figure()
 
     def _iterate(axes, x_center, y_center, horizontal, size, iterations):
@@ -46,8 +47,8 @@ def render(x_start=1.0, y_start=0.5, size=1.0, iterations=13, **kwargs):
             (y1, y2) = (y_center - halfsize, y_center + halfsize)
 
         axes.plot((x1,x2), (y1,y2), color=render_color, **plot_args)
-        _iterate(axes, x1, y1, not horizontal, 0.6*size, iterations-1)
-        _iterate(axes, x2, y2, not horizontal, 0.6*size, iterations-1)
+        _iterate(axes, x1, y1, not horizontal, ratio*size, iterations-1)
+        _iterate(axes, x2, y2, not horizontal, ratio*size, iterations-1)
 
     axes = figure.gca()
     axes.plot(
@@ -57,6 +58,8 @@ def render(x_start=1.0, y_start=0.5, size=1.0, iterations=13, **kwargs):
             **plot_args
         )
     _iterate(axes, x_start, y_start + (size/2), True, 0.6*size, iterations)
+    axes.set_xbound((0.4, 1.6))
+    axes.set_ybound((0.0, 1.4))
     axes.set_title(opts.get('title', 'Self-similar Fractal Tree'))
 
     if opts.get('filename') is not None:
