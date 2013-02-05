@@ -30,7 +30,42 @@ fractal structure.
 
 \section*{Capacity Dimension}
 
-\section*{Systems of ODEs}
+We wish to compute the capacity dimension for a middle-sixth-removed Cantor set.
+Note that removing the middle sixth of a unit line segment leaves two smaller
+segments, each of length $\frac{5}{12}$. Table 2 breaks down the number of 
+$\varepsilon$-radius balls needed at each iteration of removing the middle 
+sixth.
+
+\begin{center}
+\begin{tabular}{c | c | c}
+$n$ & $N(\varepsilon)$ & $\varepsilon$ \\ \hline
+1 & 1 & 1 \\
+2 & 2 & $\frac{5}{12}$ \\
+3 & 4 & $\frac{25}{144}$ \\
+4 & 8 & $\frac{125}{1728}$ \\
+\ldots & \ldots & \ldots \\
+$n$ & $2^{n-1}$ & $(\frac{5}{12})^{n-1}$
+\end{tabular}
+\\
+\vspace{1.0em}
+Table 2: $N(\varepsilon)$ for a middle-sixth-removed Cantor set.
+\end{center}
+
+The capacity dimension is defined as 
+
+\begin{equation}
+d_c = \lim_{\varepsilon \to 0} \frac{\log(N(\varepsilon))}{\log(\frac{1}{\varepsilon})}
+\end{equation}
+
+We compute the capacity dimension:
+
+\begin{equation}
+d_c = \lim_{n \to \infty} \frac{\log(2^{n-1})}{\log((\frac{12}{5})^{n-1})}
+\end{equation}
+
+\begin{equation}
+d_c = \frac{\log 2}{\log(\frac{12}{5})} = 0.79
+\end{equation}
 
 \section*{Fractal Tree}
 
@@ -52,6 +87,38 @@ greater that 0.707, many points inside the volume of the tree could be reached
 by branching down two or more different paths. For smaller length ratios, each 
 point in the volume of the tree corresponds uniquely to a branch path.
 
+Adapting the program to change segment length ratios and different angles
+between the left and right branches yields interesting results. Figure 3 shows a
+plot of the fractal tree with left segment ratio 0.7, right segment ratio 0.65, 
+left branching angle 60 degrees, and right branching angle 40 degrees.
 
+\begin{center}
+\includegraphics[scale=0.6]{fractaltree_skewed.png}
+\\
+Figure 3: Rotated fractal tree with tuned parameters.
+\end{center}
+
+Figure 3 clearly demonstrates that changing segment length ratios and branching
+angles changes the shape of the tree, but preserves self-similarity. We can make
+some neat fractal trees by playing around with the parameters. Figures 4 and 5 
+show a pair of representative fractal tree plots.
+
+\begin{center}
+\includegraphics[scale=0.6]{fractaltree_skew2.png}
+\\
+Figure 4: Representative plot of a fractal tree.
+\end{center}
+
+Figure 4 was generated with right and left segment ratios set to 0.6, left 
+branching angle 30 degrees, and right branching angle 95 degrees. 
+
+\begin{center}
+\includegraphics[scale=0.6]{fractaltree_skew3.png}
+\\
+Figure 5: Another representative fractal tree plot.
+\end{center}
+
+Figure 5 was generated with left segment ratio 0.55, right segment ratio 0.7,
+left branching angle 85 degrees, and right branching angle 5 degrees.
 
 \end{document}
