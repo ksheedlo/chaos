@@ -1,0 +1,123 @@
+\documentclass[12pt, letterpaper]{article}
+\title{Problem Set 4: Forced and Damped Pendulum}
+\author{Ken Sheedlo}
+\usepackage[pdftex]{graphicx}
+\usepackage{fullpage}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+\maketitle{}
+
+\section*{Undriven, Undamped System}
+
+In order to better analyze the behavior of a chaotic pendulum system, it's 
+important to understand the behavior of a simple pendulum, without damping or a 
+drive. The first pendulum system we will examine was created with $m=0.1$ kg, 
+$l=0.1$ m, $\beta=0$ and without drive. Figure 1 shows a plot of the state-space
+trajectory starting from the point $[\theta, \omega] = [3, 0.1]$. 
+
+\begin{center}
+\includegraphics[scale=0.6]{ps4_2a.png}
+\\
+Figure 1: State-space trajectory in an undamped, undriven pendulum.
+\end{center}
+
+This trajectory is analogous to picking the pendulum almost, but not quite 
+straight up standing vertically, and then dropping it. In an undamped and 
+undriven system, the pendulum returns to the same height at which it was dropped
+and comes back, oscillating forever. The starting point at $[3, 0.1]$ is close
+to an unstable equilibrium point at $[\pi, 0]$. The system will not move from
+that point on its own, but will move and not return there if it is perturbed.
+
+A second state-space trajectory was generated starting from 
+$[\theta, \omega] = [0.01, 0]$. The results are shown in Figure 2.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps4_2b.png}
+\\
+Figure 2: State-space trajectory from $[\theta, \omega] = [0.01, 0]$.
+\end{center}
+
+This trajectory is much smaller and more perfectly elliptical than the 
+trajectory shown in Figure 1, which is large and shaped more like a football or
+a diamond.
+
+\section*{State-Space Portraits}
+
+With the same parameters to the pendulum as in the examples above, I generated a
+state-space portrait of the system. Figure 3 shows the resulting state-space 
+portrait for the undamped, undriven pendulum.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps4_3.png}
+\\
+Figure 3: State-space portrait for an undamped, undriven pendulum.
+\end{center}
+
+The elliptical orbits near the center represent a pendulum swinging through a 
+small area near the bottom. Football-shaped orbits further out reflect the 
+behavior when the pendulum swings near the top but does not go over, and the 
+higher wave-shaped orbits reflect behavior when the pendulum whirls over the 
+top.
+
+Figure 4 shows a state-space portrait of a damped pendulum with $m=0.1$ kg, 
+$l=0.1$ m, $\beta=0.25$ and without drive. 
+
+\begin{center}
+\includegraphics[scale=0.6]{ps4_4.png}
+\\
+Figure 4: State-space portrait for a damped pendulum.
+\end{center}
+
+This plot demonstrates the effect of the damping mechanic on the system. 
+Trajectories spiral into the center where they would have looped forever or 
+whirled over the top in the undamped system. Of course, the center represents 
+the state where the pendulum is stopped pointing straight down. This is a stable
+fixed point at $[\theta, \omega] = [0, 0]$. 
+
+Plotting the phase portrait with $\theta$ modulo $2\pi$ brings attention to the
+unstable fixed points of the system. An example is shown in Figure 5. 
+
+\begin{center}
+\includegraphics[scale=0.6]{ps4_5.png}
+\\
+Figure 5: State-space portrait for a damped pendulum ($\theta$ mod $2\pi$).
+\end{center}
+
+Drawing the plot with $\theta$ modulo $2\pi$ meant I had to use dot markers 
+instead of smooth curves. Figure 5 resembles Figure 4 if it had been shifted 
+$\pi$ to the left. An unstable fixed point is now in the center. This point
+corresponds to a pendulum pointing straight up and not falling in either 
+direction, but standing still.
+
+\section*{Chaotic Trajectories}
+
+I found a chaotic orbit with parameters $m=0.1$, $l=0.1$, $\beta=0.25$, $A=1$,
+and $\alpha=7.4246$. Figure 6 plots the state-space trajectory over 100,000 
+steps of fourth-order Runge-Kutta.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps4_6.png}
+\\
+Figure 6: Chaotic pendulum orbit.
+\end{center}
+
+\section*{Numerical Effects}
+
+For experimenting with the timestep, I used the same parameters as in Figure 1. 
+Increasing the timestep $h$ gave a progression of degenerate results. For 
+$h<0.03$, there was little noticeable effect. For $0.03 < h < 0.07$, the 
+football shape from Figure 1 turns into a fat oval with a large hole in the 
+center. For $0.07 < h < 0.2$, the trajectory spirals into the center at 
+$[\theta, \omega] = [0,0]$. These effects could be explained by the algorithm
+looking slightly too far ahead and detecting the curve sweeping around, 
+overcorrecting for itself. For $h > 0.3$, the trajectory escapes the basin 
+around the origin and diverges wildly in an apparently random direction. This 
+could be explained by the algorithm reaching outside the basin around the origin
+to measure the derivative and adding it together with measurements from inside
+the basin, generating unpredictable results.
+
+\end{document}

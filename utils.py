@@ -39,3 +39,30 @@ def fp_equal(x1, x2, tol=EPSILON):
 
     '''
     return numpy.abs(x1-x2) < tol
+
+def bind_kwargs(func, **kwargs):
+    '''
+    Binds the specified kwargs to the specified function.
+
+    '''
+    outer_kwargs = dict(kwargs)
+
+    def _bound(*args, **kwargs):
+        instance_kwargs = dict(outer_kwargs)
+        instance_kwargs.update(kwargs)
+        return func(*args, **instance_kwargs)
+    return _bound
+
+def ufunc(nin, nout, dtype=object):
+    '''
+    Wraps numpy.frompyfunc in a decorator.
+
+    '''
+    def _decorator(func):
+        '''
+        Decorates a function, making it a Numpy ufunc.
+
+        '''
+        uf = numpy.frompyfunc(func, nin, nout)
+        return bind_kwargs(uf, dtype=dtype)
+    return _decorator
