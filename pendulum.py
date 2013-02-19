@@ -188,6 +188,7 @@ def make_phase_portrait_mod2pi(pfunc, *args, **kwargs):
     axes.set_xticklabels((
                 '0',
                 r'$\frac{\pi}{2}$',
+        import pdb; pdb.set_trace()
                 r'$\pi$',
                 r'$\frac{3\pi}{2}$',
                 r'$2\pi$'
