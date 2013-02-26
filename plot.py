@@ -13,6 +13,7 @@ from __future__ import division
 
 import matplotlib.pyplot
 import mpl_toolkits.mplot3d
+import numpy
 
 from utils import split_dict
 
@@ -103,3 +104,28 @@ def render3d(*args, **kwargs):
             action(opts[name])
 
     _render_to_output(figure, opts.get('file_prefix'))
+
+def mod2pi(*args, **kwargs):
+    '''
+    Renders a 2D plot modulo 2*pi.
+
+    '''
+    plot_args = dict(kwargs)
+    plot_args.update({
+            'xbound': (0, 2*numpy.pi),
+            'xticks': (
+                    0,
+                    numpy.pi/2,
+                    numpy.pi,
+                    3*numpy.pi/2,
+                    2*numpy.pi
+                ),
+            'xticklabels': (
+                    '0',
+                    r'$\frac{\pi}{2}$',
+                    r'$\pi$',
+                    r'$\frac{3\pi}{2}$',
+                    r'$2\pi$'
+                )
+        })
+    render(*args, **plot_args)

@@ -36,3 +36,20 @@ class TestCase(unittest.TestCase):
         for (t_i, x_i) in zip(ts, xs):
             x_diff = norm(x_i - func(t_i, *f_args))
             self.assertAlmostEqual(delta, 0.0, **assert_kwargs)
+
+    def assertArrayEqual(self, rhs, lhs, **kwargs):
+        '''
+        Assert array equality.
+
+        '''
+        delta = kwargs.get('delta')
+        places = kwargs.get('places')
+
+        assert_kwargs = dict()
+        if delta is not None:
+            assert_kwargs['delta'] = delta
+        elif places is not None:
+            assert_kwargs['places'] = places
+
+        for (foo, baz) in zip(rhs, lhs):
+            self.assertAlmostEqual(foo, baz, **assert_kwargs)
