@@ -40,12 +40,10 @@ def ic(x, y, z):
     Helper for generating initial condition vectors.
 
     '''
-    vec = numpy.array(
-                    [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+    return numpy.array(
+                    [x, y, z, 1, 0, 0, 0, 1, 0, 0, 0, 1],
                     dtype=numpy.float64
                 )
-    vec[0:3] = (x, y, z)
-    return vec
 
 def integrate(x0):
     '''
