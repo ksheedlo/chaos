@@ -1,7 +1,7 @@
 TEX=pdflatex
 
 .PHONY: all
-all: ps1.pdf ps2.pdf ps3.pdf ps4.pdf ps5.pdf ps6.pdf
+all: ps1.pdf ps2.pdf ps3.pdf ps4.pdf ps5.pdf ps6.pdf ps7.pdf
 
 ps1.pdf: ps1.tex
 	${TEX} ps1.tex
@@ -20,3 +20,6 @@ ps5.pdf: ps5.tex
 
 ps6.pdf: ps6.tex 
 	${TEX} ps6.tex
+
+ps7.pdf: ps7.tex 
+	${TEX} ps7.tex

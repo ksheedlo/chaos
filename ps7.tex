@@ -1,0 +1,113 @@
+\documentclass[12pt, letterpaper]{article}
+\title{Problem Set 7: Variational Equation}
+\author{Ken Sheedlo}
+\usepackage[pdftex]{graphicx}
+\usepackage{fullpage}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+\maketitle{}
+
+\section*{1. Lorenz System Jacobian}
+
+We wish to find the Jacobian of the Lorenz System. Recall that the Jacobian is
+written as 
+
+\begin{equation}
+D_x\vec{F} = \left[ \begin{array}{ccc}
+\frac{\partial f_x}{\partial x} & \frac{\partial f_x}{\partial y} & 
+\frac{\partial f_x}{\partial z} \\ \frac{\partial f_y}{\partial x} & 
+\frac{\partial f_y}{\partial y} & \frac{\partial f_y}{\partial z} \\
+\frac{\partial f_z}{\partial x} & \frac{\partial f_z}{\partial y} & 
+\frac{\partial f_z}{\partial z} \\
+\end{array} \right]
+\end{equation}
+
+and the Lorenz system is
+
+\begin{equation}
+\vec{F}(\vec{x}, a, r, b) = \left[ \begin{array}{c}
+\dot{x} \\ \dot{y} \\ \dot{z}
+\end{array} \right] = \left[ \begin{array}{c}
+a(y-x) \\ rx - y - xz \\ xy - bz
+\end{array} \right]
+\end{equation}
+
+Taking partials of $\dot{x}$, $\dot{y}$ and $\dot{z}$ with respect to $x$, $y$
+and $z$ yields the following system of equations:
+
+\begin{equation}
+\frac{\partial f_x}{\partial x} = -a
+\end{equation}
+
+\begin{equation}
+\frac{\partial f_x}{\partial y} = a
+\end{equation}
+
+\begin{equation}
+\frac{\partial f_x}{\partial z} = 0
+\end{equation}
+
+\begin{equation}
+\frac{\partial f_y}{\partial x} = r
+\end{equation}
+
+\begin{equation}
+\frac{\partial f_y}{\partial y} = -1
+\end{equation}
+
+\begin{equation}
+\frac{\partial f_y}{\partial z} = -x
+\end{equation}
+
+\begin{equation}
+\frac{\partial f_z}{\partial x} = y
+\end{equation}
+
+\begin{equation}
+\frac{\partial f_z}{\partial y} = x
+\end{equation}
+
+\begin{equation}
+\frac{\partial f_z}{\partial z} = -b
+\end{equation}
+
+Written as a Jacobian, these equations give
+
+\begin{equation}
+D_x\vec{F} = \left[ \begin{array}{ccc}
+-a & a & 0 \\
+r & -1 & -x \\
+y & x & -b 
+\end{array} \right]
+\end{equation}
+
+\section*{2. Lorenz Variational System}
+
+The variational system for the Lorenz equation can be written as $\dot{\delta}
+= D_x\vec{F}\delta$. In terms of the Jacobian matrix and the matrix of variations,
+this is
+
+\begin{equation}
+\dot{\delta} = \left[ \begin{array}{ccc}
+-a & a & 0 \\
+r & -1 & -x \\
+y & x & -b
+\end{array} \right] \left[ \begin{array}{ccc}
+\delta_{xx} & \delta_{yx} & \delta_{zx} \\
+\delta_{xy} & \delta_{yy} & \delta_{zy} \\
+\delta_{xz} & \delta_{yz} & \delta_{zz} 
+\end{array} \right]
+\end{equation}
+
+So, $\dot{\delta}$ is a $3 \times 3$ matrix of derivatives, and $\delta_{xy}$ is
+the component of the $x$-variation that comes from the previous $y$-variation. 
+We can use the matrix of derivatives of variations to integrate the change in 
+variations over the system.
+
+\section*{3. Numerical Analysis}
+
+\end{document}
