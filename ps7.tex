@@ -110,4 +110,66 @@ variations over the system.
 
 \section*{3. Numerical Analysis}
 
+Integrating the system from initial condition (a) as described in the writeup
+gave the following results:
+
+\begin{equation}
+\delta = \left[ \begin{array}{ccc}
+2.545755 & 1.980193 & -0.030017 \\
+5.557742 & 4.395069 & -0.090683 \\
+0.506627 & 0.384858 & 0.665060
+\end{array} \right]
+\end{equation}
+
+\vspace{0.6em}
+
+with column sums $\sum{\delta_x} = 8.61024$, $\sum{\delta_y} = 6.760119$, and 
+$\sum{\delta_z} = 0.544360$. 
+
+\vspace{1em}
+
+Integrating the system from initial condition (b) gave the following results:
+
+\begin{equation}
+\delta = \left[ \begin{array}{ccc}
+2.333913 & 1.751566 & -0.509134 \\
+4.566961 & 3.461204 & -1.218821 \\
+3.383342 & 2.669810 & -0.045495 
+\end{array} \right]
+\end{equation}
+
+\vspace{0.6em}
+
+with column sums $\sum{\delta_x} = 10.284215$, $\sum{\delta_y} = 7.882581$, and
+$\sum{\delta_z} = -1.773450$. 
+
+\vspace{1em}
+
+Integrating the system from initial condition (c) gave the following results:
+
+\begin{equation}
+\delta = \left[ \begin{array}{ccc}
+2.545755  &  1.980193  & 0.030017 \\
+5.557742  &  4.395069  & 0.090683 \\
+-0.506627 &  -0.384858 & 0.665060 
+\end{array} \right]
+\end{equation}
+
+\vspace{0.6em}
+
+with column sums $\sum{\delta_x} = 7.596870$, $\sum{\delta_y} = 5.990404$, and
+$\sum{\delta_z} = 0.785760$. 
+
+\vspace{1em}
+
+The variations evidently grow fastest from point (b), where the $x$ component 
+of the variation grows by a factor of 10, the $y$ by almost a factor of 8, and
+the $z$ flips around backwards to $-1.7$. In fact, the $z$ component from point
+(b) is interesting in that it is the only component from any of the initial
+conditions tested that actually experiences negative growth. The $x$ and $y$ 
+components consistently experience substantial positive growth from all initial
+conditions. The $z$ components of evolved variations from points (a) and (c) are
+both positive and less than 1. This means that they should be getting smaller 
+but not changing sign.
+
 \end{document}

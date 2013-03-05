@@ -62,6 +62,9 @@ def mprint(xmat):
     '''
     for row in xmat:
         print '\t'.join(['{0:.6f}'.format(x) for x in row])
+    print 'xs: {0:.6f}'.format(sum(xmat[:,0]))
+    print 'ys: {0:.6f}'.format(sum(xmat[:,1]))
+    print 'zs: {0:.6f}'.format(sum(xmat[:,2]))
     print
 
 def main(argv=None):
