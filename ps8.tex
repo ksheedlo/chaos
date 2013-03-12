@@ -1,0 +1,121 @@
+\documentclass[12pt, letterpaper]{article}
+\title{Problem Set 8: Delay Coordinate Embedding}
+\author{Ken Sheedlo}
+\usepackage[pdftex]{graphicx}
+\usepackage{fullpage}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+\maketitle{}
+
+\section*{1. Constructing State-Space Trajectories}
+
+I wrote a program to construct the state-space trajectory of the pendulum given 
+a data set containing only $(\theta, t)$. To find $\omega$, I used an $O(h^2)$
+three-point formula for numerical differentiation. This gave slightly better
+results than the simple first-order forward difference formula. The results are
+shown in Figure 1.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps8_1.png}
+\\
+Figure 1: State-space trajectory constructed from data set 1.
+\end{center}
+
+To make the plot, I sampled at the period $\Delta t = 0.03$, which is every 
+thirtieth data point. The shape of the plot is not a clean spiral, although it
+is round and spiraling into the center. It is somewhat jagged, crossing over
+itself in places and losing symmetry in the center. Two obvious factors could
+be contributing to this behavior. First, because this data came from a real 
+experiment, there could be errors in the precision of the observations. The data 
+set gives 16 digits of precision for each $\theta$ value. It is doubtful that the 
+instrument that was used to measure $\theta$ is really that precise. Second, 
+numerical differentiation is problematic because of the way computers perform
+arithmetic operations. Using a smaller step or a more precise formula forces the
+machine to divide by a smaller number, increasing the potential for round-off
+error. This could cause undesirable numerical damping effects in the plot.
+
+\section*{2. Delay Coordinate Embedding}
+
+To achieve delay-coordinate embedding, I wrote two Python routines, 
+\texttt{embed.embed} and \texttt{plot.embedded}. I used \texttt{embed.embed} to
+construct the list of $m$-vectors and \texttt{plot.embedded} to plot the $j^{th}$
+and $k^{th}$ elements of each vector modulo $2\pi$. Keeping the routines for 
+plotting and generating data separate made the program easier to test and debug.
+
+\subsection*{a. Data Set 2}
+
+Figure 2 shows a run of my delay-coordinate embedding program with $\tau=0.15$ s 
+and $m=7$. 
+
+\begin{center}
+\includegraphics[scale=0.6]{ps8_2a.png}
+\\
+Figure 2: Delay-coordinate embedding over \texttt{data2}.
+\end{center}
+
+This is clearly a chaotic attractor. The trajectory scatters around the plot like 
+a tangled rat's nest. It's not particularly clear where any of the trajectories 
+will go given some elapsed time. It is interesting that the patterns near the 
+corners and along the main diagonal are different from the patterns in between, 
+for instance along $\theta(t+0.3) = \theta(t)\pm\pi$. It would be interesting to
+explore further what this means in terms of the trajectory.
+
+\subsection*{b. Data Set 3}
+
+Figure 3 shows results of the delay-coordinate embedding program for various 
+values of $\tau$. 
+
+\begin{minipage}[t]{0.5\textwidth}
+\begin{center}
+\includegraphics[scale=0.55]{ps8_1_2b_cropped.png}
+\includegraphics[scale=0.55]{ps8_4_2b_cropped.png}
+\end{center}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{center}
+\includegraphics[scale=0.55]{ps8_3_2b_cropped.png}
+\includegraphics[scale=0.55]{ps8_5_2b_cropped.png}
+\end{center}
+\end{minipage}
+\begin{center}
+Figure 3: Delay-coordinate embedding over \texttt{data3} with varying $\tau$.
+\\
+\end{center}
+
+I think this means that the system is oscillating back and forth with these
+parameters. So for $\tau=0.01$ the delay is too short for the trajectory to 
+change much. For $\tau=0.5$ and $\tau=1.0$ the trajectory oscillates between 
+two ranges of states, and for $\tau=1.5$ the system cycles back and forth each
+time it is sampled, so it returns back to where it started.
+
+\section*{3. Thought Experiments}
+\subsection*{a. Takens' Theorem Requirements}
+
+The driven pendulum is a nonautonomous system in $(\theta, \omega)$. So the 
+actual dimension for a driven pendulum should be 3 $(\theta, \omega, t)$. Takens'
+theorem states that the system can be embedded in $m$ dimensions if $m$ is 
+greater than twice the box counting dimension of the attractor. The box counting
+dimension can be no greater than 3, so $m=7$ is always sufficient to embed the
+driven pendulum system. The undriven pendulum is an autonomous system in 
+$(\theta, \omega)$. Its box counting dimension can be no greater than 2, so
+$m=5$ would be sufficient for the undriven pendulum system.
+
+\subsection*{b. Changing Dimension}
+
+If I used $m=2$ the trajectory would not reflect the true dynamics of the 
+system. If I used $m=25$ the reconstructed trajectory would not get to a better
+picture, but noise might be amplified.
+
+\subsection*{c. Changing Delay}
+
+If I used $\tau=10^{-16}$ then there wouldn't be enough change and you would 
+just see a diagonal line along $\theta(t+k\tau) = \theta(t)$. If I used 
+$\tau=10^6$ then you might see dots scattered randomly, unless the natural 
+period of the pendulum divided $10^6$ evenly in which case you would see a 
+diagonal line because it would be sampling at the natural frequency.
+
+\end{document}

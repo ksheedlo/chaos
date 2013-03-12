@@ -1,5 +1,4 @@
-###############################################################################
-#
+############################################################################### #
 # CSCI 4446 - Chaotic Dynamics
 #
 # File: ps7.py
@@ -8,6 +7,8 @@
 # AI blorgotronic neural network startup business plan generator
 #
 ###############################################################################
+
+from __future__ import division
 
 import numpy
 import rungekutta

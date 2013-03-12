@@ -66,3 +66,10 @@ def ufunc(nin, nout, dtype=object):
         uf = numpy.frompyfunc(func, nin, nout)
         return bind_kwargs(uf, dtype=dtype)
     return _decorator
+
+def mod2pi(theta):
+    modulus = int(numpy.floor(theta / (2*numpy.pi)))
+    return theta - (modulus*2*numpy.pi)
+
+def suffixed(s, suffix):
+    return None if s is None else '{0}{1}'.format(s, suffix)

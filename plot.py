@@ -14,8 +14,7 @@ from __future__ import division
 import matplotlib.pyplot
 import mpl_toolkits.mplot3d
 import numpy
-
-from utils import split_dict
+import utils
 
 def _render_to_output(figure, file_prefix):
     '''
@@ -48,12 +47,13 @@ def render(*args, **kwargs):
         ('yticks', axes.set_yticks),
         ('xticklabels', axes.set_xticklabels),
         ('yticklabels', axes.set_yticklabels),
+        ('aspect', axes.set_aspect),
         ('xbound', lambda (x1, x2): axes.set_xbound(x1, x2)),
         ('ybound', lambda (y1, y2): axes.set_ybound(y1, y2)),
         ('file_prefix', lambda _: None),
         ('ax_callback', lambda _: None),
     )
-    opts, plot_args = split_dict([name for (name, _) in opt_actions], kwargs)
+    opts, plot_args = utils.split_dict([name for (name, _) in opt_actions], kwargs)
 
     if 'ax_callback' in opts:
         opts['ax_callback'](axes) 
@@ -86,13 +86,14 @@ def render3d(*args, **kwargs):
         ('xticklabels', axes.set_xticklabels),
         ('yticklabels', axes.set_yticklabels),
         ('zticklabels', axes.set_zticklabels),
+        ('aspect', axes.set_aspect),
         ('xbound', lambda (x1, x2): axes.set_xbound(x1, x2)),
         ('ybound', lambda (y1, y2): axes.set_ybound(y1, y2)),
         ('zbound', lambda (z1, z2): axes.set_zbound(z1, z2)),
         ('file_prefix', lambda _: None),
         ('ax_callback', lambda _: None),
     )
-    opts, plot_args = split_dict([name for (name, _) in opt_actions], kwargs)
+    opts, plot_args = utils.split_dict([name for (name, _) in opt_actions], kwargs)
 
     if 'ax_callback' in opts:
         opts['ax_callback'](axes)
@@ -129,3 +130,18 @@ def mod2pi(*args, **kwargs):
                 )
         })
     render(*args, **plot_args)
+
+def embedded(vs, xdim, ydim, *args, **kwargs):
+    '''
+    Renders a delay coordinate embedded data set.
+
+    '''
+    xs = numpy.array([
+                utils.mod2pi(v) for v in vs[:,xdim]
+            ], dtype=numpy.float64)
+    ys = numpy.array([
+                utils.mod2pi(v) for v in vs[:,ydim]
+            ], dtype=numpy.float64)
+    rfunc = render if 'xbound' in kwargs else mod2pi
+    plot_args = (xs, ys) + tuple(args)
+    rfunc(*plot_args, **kwargs)
