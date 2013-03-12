@@ -154,12 +154,8 @@ def _activate(program):
                             pargs, 
                             stdin=subprocess.PIPE, 
                             stdout=subprocess.PIPE, 
-                            stderr=subprocess.PIPE
                         )
-        (outdata, errdata) = child.communicate(input=idata)
-
-        if errdata:
-            print >> sys.stderr, errdata
+        (outdata, _) = child.communicate(input=idata)
 
         buf = StringIO.StringIO(outdata)
         try:
@@ -170,6 +166,4 @@ def _activate(program):
     return (pyname, _callback)
 
 selfmod = sys.modules[__name__]
-for program in PROGRAMS:
-    (pname, callback) = _activate(program)
-    selfmod.__dict__[pname] = callback
+selfmod.__dict__.update([_activate(program) for program in PROGRAMS])
