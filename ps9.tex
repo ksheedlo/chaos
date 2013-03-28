@@ -1,0 +1,186 @@
+\documentclass[12pt, letterpaper]{article}
+\title{Problem Set 9: Lyapunov Exponents}
+\author{Ken Sheedlo}
+\usepackage[pdftex]{graphicx}
+\usepackage{fullpage}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+\maketitle{}
+
+\section*{2. Choosing the Delay Parameter}
+
+To choose the delay parameter, I used the following \textsc{Tisean} command:
+
+\vspace{1em}
+\texttt{\$ mutual -D 180}
+\vspace{1em}
+
+For this assignment, I chose to write a light wrapper around the \textsc{Tisean}
+package, which I call \texttt{tispy}.\footnote{This means that when I state that I used
+a given \textsc{Tisean} command, I actually mean that \texttt{tispy} rendered my Python code
+to produce that command. For instance, \texttt{\$ mutual -D 180} corresponds to 
+\texttt{tispy.mutual('-D', 180, input=data)} where \texttt{data} is the data array 
+read in from \texttt{data2.first250sec}.} My \texttt{tispy} library takes a Numpy 
+\texttt{ndarray} object, passes it to \textsc{Tisean} and returns the result
+back as a Numpy \texttt{ndarray}. Since I had \texttt{tispy} handle input and 
+output for me, I did not need to pass \textsc{Tisean} a data file or specify an 
+output file.
+
+I found the first minimum of the mutual information plot at $\tau=155$. The 
+results are shown in Figure 1.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps9_1.png}
+\\
+Figure 1: Choosing the delay parameter $\tau$ for \texttt{data2.first250sec}.
+\end{center}
+
+The data show that the delay parameter $\tau$ that we should use is 155 steps or
+0.31 seconds. To make time easier to reason about, I will give $\tau$ in units of
+steps for the remainder of the discussion unless otherwise specified. One step is
+0.002 seconds when working with the \texttt{data2} set and 0.001 seconds with the
+other data sets.
+
+\section*{3. Choosing the Embedding Dimension}
+
+Knowing that I should use $\tau=155$ as my delay parameter, I used the following
+\textsc{Tisean} command to find the embedding dimension to use:
+
+\vspace{1em}
+\texttt{\$ false\_nearest -M 1,10 -d 155}
+\vspace{1em}
+
+Figure 2 shows the resulting output.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps9_2.png}
+\\
+Figure 2: Choosing the embedding dimension $m$ for \texttt{data2.first250sec}.
+\end{center}
+
+The plot shows that we should choose an embedding dimension of 8, because 8 is 
+the first embedding dimension tested with less than 10\% false nearest neighbors.
+
+\section*{4. Delay Coordinate Embedding with TISEAN}
+
+Using the \texttt{delay} tool included with \textsc{Tisean}, I embedded 
+\texttt{data2.first250sec} using $\tau=155$ and $m=8$. I used the following
+\textsc{Tisean} command to do the embedding:
+
+\vspace{1em}
+\texttt{\$ delay -d 155 -m 8}
+\vspace{1em}
+
+The results are shown in Figure 3.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps9_3.png}
+\\
+Figure 3: Delay coordinate embedding using \textsc{Tisean}.
+\end{center}
+
+I plotted the zeroth element of the resulting state vector, $\theta(t)$, against
+the second, \newline$\theta(t+2\tau) = \theta(t+0.62)$. The results strongly 
+resemble Figure 2 from Problem Set 8, although they are much less dense. This is 
+reasonable because in this plot we are embedding only the first section of the 
+data set, where in Problem Set 8 we embedded the entire data set. Both plots 
+loop and zigzag in wild trajectories and cover the space evenly with few large
+empty spaces in between. If we used \textsc{Tisean} to embed the entire data
+set, we would most likely get a similar result as from Problem Set 8.
+
+\section*{5. Estimating the Lyapunov Exponent}
+
+I used the following \textsc{Tisean} command to help me estimate $\lambda$ for
+the \texttt{data2} set.
+
+\vspace{1em}
+\texttt{\$ lyap\_k -d 155 -m 8 -M 8}
+\vspace{1em}
+
+This generated the data shown in Figure 4. Figure 4 plots the number of iterations
+of Kantz's algorithm against the logarithm of the stretching factor.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps9_4.png}
+\\
+Figure 4: Calculating the Lyapunov exponent with data from \texttt{lyap\_k}.
+\end{center}
+
+To find the Lyapunov exponent, I took a linear regression of the initial sloped
+section of each curve on Figure 4 before it flattens out. This section turned
+out to be just the first two points on each curve. Using just two points to find
+the line is generally a questionable numerical method, but in this case it gave
+a reasonable result. I found $\lambda$ to be 0.496714. This is an appropriate 
+result because \texttt{data2} is a chaotic system, so the first Lyapunov exponent
+should be positive nonzero.
+
+Next I tried varying $m$ to demonstrate the effects of changing $m$ on the 
+computed $\lambda$. Table 5 shows the results.
+
+\begin{center}
+\begin{tabular}{c | c}
+$m$ & $\lambda$ \\ \hline
+4 & 0.516219 \\
+6 & 0.495411 \\
+7 & 0.497139 \\
+8 & 0.496714 \\
+9 & 0.511835 \\
+10 & 0.544658 \\
+12 & 0.601088
+\end{tabular}
+\\
+\vspace{1em}
+Table 5: Computed Lyapunov exponents for varying $m$.
+\end{center}
+
+Table 5 shows that the computed $\lambda$ is stable near $m=8$, but changes
+for $m \geq 10$ and $m < 6$. This suggests that one could use an embedding
+dimension of 6 and still get a decent approximation of $\lambda$. Using $m=8$ 
+could be more conservative than is really necessary. 
+
+\newpage
+\section*{6. Lyapunov Exponents for a Synthetic Data Set}
+
+I generated a 30,000 point run of RK4 on the Lorenz system with parameters
+$a=16, r=45, b=4$. I used \texttt{mutual} to estimate $\tau=0.105$ seconds or
+105 steps of RK4. Figure 6 shows the delay coordinate embedding for the $x$
+coordinate of this data.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps9_6.png}
+\\
+Figure 6: Delay coordinate embedding the Lorenz system.
+\end{center}
+
+This embedding clearly shows a chaotic attractor. The two characteristic loops
+in the Lorenz system are visible. The embedding should be topologically identical
+to the original plot and indeed we can see some of the topology in the embedding,
+so this is reasonable. 
+
+Figure 7 shows the results from running \texttt{lyap\_k} on the generated Lorenz
+data set.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps9_7.png}
+\\
+Figure 7: Calculating the Lyapunov exponent for the Lorenz system.
+\end{center}
+
+Using the data shown in Figure 7, I computed the Lyapunov exponent to be 0.002861
+in this system. It is surprising that the Lyapunov exponent is so close to 0 in
+a chaotic system. Intuitively, the Lorenz system should have a larger positive
+first Lyapunov exponent. 
+
+Integrating the variational system and using the final eigenvalues to find
+$\lambda_i$, we find $\lambda_1=0.013334$, $\lambda_2=0.012097$, 
+$\lambda_3=0.011929$. This is a numerical limit at $t=30$ seconds, and 
+$\lambda_i << 1$, so it is reasonable to argue that $\lambda_i$ are small and 
+positive as $t$ approaches $\infty$. This is consistent with our results from 
+before. We can conclude that the Lyapunov exponent in the Lorenz system is close 
+to 0.
+
+\end{document}
