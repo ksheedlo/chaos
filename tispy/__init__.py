@@ -1,38 +1,32 @@
 ###############################################################################
 #
-# File: tizz/__init__.py
+# File: tispy/__init__.py
 # Author: Ken Sheedlo
 #
 # TISEAN interface library for Python
 #
 ###############################################################################
 
-import numpy
-import StringIO
-import subprocess
 import sys
+import wrapper
 
 PROGRAMS = [
     'ar-model',
     'arima-model',
     'av-d2',
-    'boxcount',
-    'causality',
-    'changes',
     'corr',
-    'd2',
+    # 'd2',     # d2 intentionally left out due to currently incompatible file
+                # structure.
     'delay',
     'extrema',
     'false_nearest',
     'fsle',
-    'ghkss',
+    # 'ghkss', # Incompatible file structure.
     'histogram',
     'lfo-ar',
     'lfo-run',
     'lfo-test',
     'low121',
-    'lyap_k',
-    'lyap_r',
     'lyap_spec',
     'lzo-gm',
     'lzo-run',
@@ -40,20 +34,16 @@ PROGRAMS = [
     'makenoise',
     'mem_spec',
     'mutual',
-    'nrlazy',
+    # 'nrlazy', # Incompatible file structure.
     'nstat_z',
     'pca',
     'poincare',
     'polyback',
-    'polynom',
     'polynomp',
-    'polypar',
-    'rand',
     'rbf',
     'recurr',
     'resample',
     'rescale',
-    'routines',
     'sav_gol',
     'xcor',
     'xzero',
@@ -66,7 +56,6 @@ PROGRAMS = [
     'c2g',
     'c2naive',
     'c2t',
-    'changes',
     'choose',
     'cluster',
     'compare',
@@ -104,66 +93,17 @@ PROGRAMS = [
     'xrecur'
 ]
 
-def _activate(program):
-    '''
-    Constructs a callback interface to a TISEAN program.
-
-    Params:
-        program     The name of the TISEAN program to call.
-
-    Returns: a tuple (name, callback) where
-        name        A suitable Python name for the program. This will be equal
-                    to the TISEAN program's name unless it uses Python special
-                    characters (e.g., -). In this case an appropriate substitute
-                    will be used (- => _).
-        callback    The function to run, conforming to the standard tizz 
-                    interface. It takes an optional input keyword-arg that will
-                    be converted to a string and passed to TISEAN as standard 
-                    input. It returns the result from TISEAN as a Numpy ndarray.
-    '''
-    pyname = program.replace('-', '_')
-
-    def _straightline(dargs):
-        '''
-        Converts a keyword-arg dictionary into a shell arguments.
-
-        '''
-        def _combine(lst, kv):
-            return lst + ['-{0}'.format(kv[0]), str(kv[1])]
-        return reduce(_combine, dargs.items(), [])
-
-    def _callback(*args, **kwargs):
-        '''
-        Standard tizz library interface callback.
-
-        '''
-        iarray = kwargs.get('input')
-        idata = None
-
-        if iarray is not None:
-            ibuf = StringIO.StringIO()
-            numpy.savetxt(ibuf, iarray)
-            idata = ibuf.getvalue()
-            ibuf.close()
-
-        pargs = [program, '-V', '0'] + list(args) + _straightline(dict({
-                        kv for kv in kwargs.items()
-                        if kv[0] != 'input'
-                    }))
-        child = subprocess.Popen(
-                            pargs, 
-                            stdin=subprocess.PIPE, 
-                            stdout=subprocess.PIPE, 
-                        )
-        (outdata, _) = child.communicate(input=idata)
-
-        buf = StringIO.StringIO(outdata)
-        try:
-            return numpy.loadtxt(buf)
-        finally:
-            buf.close()
-
-    return (pyname, _callback)
+FILE_OUTPUT_REQUIRED = [
+    'boxcount',
+    'lyap_k',
+    'lyap_r',
+    'polynom',
+    'polypar',
+]
 
 selfmod = sys.modules[__name__]
-selfmod.__dict__.update([_activate(program) for program in PROGRAMS])
+selfmod.__dict__.update([wrapper.activate(program) for program in PROGRAMS])
+selfmod.__dict__.update([
+                    wrapper.activate(program, output_to_file=True) 
+                    for program in FILE_OUTPUT_REQUIRED
+                ])
