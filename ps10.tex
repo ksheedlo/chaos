@@ -1,0 +1,104 @@
+\documentclass[12pt, letterpaper]{article}
+\title{Problem Set 10: Fractal Dimension}
+\author{Ken Sheedlo}
+\usepackage[pdftex]{graphicx}
+\usepackage{fullpage}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+\maketitle{}
+
+\section*{1. Box Counting Algorithm}
+
+In order to experiment with fractal dimension, I first implemented the box
+counting algorithm for computing capacity dimension. My implementation of box
+counting uses the naive solution with one critical optimization. Instead of 
+storing a matrix of boolean values and counting the spaces that the attractor
+fills, I store a set of points on the attractor in discretized space and count
+the cardinality of the set. The algorithm is as follows:
+
+\begin{description}
+    \item[Algorithm] \textsc{Hashed Box Counting}
+    \item[Given] An attractor $A$ in $n$ dimensions; a ball size $\varepsilon$
+    \item[Return] $N(\varepsilon)$
+    \item[Procedure] \ \vspace{0em} 
+    \begin{enumerate}
+        \item Let the set $X = \left\{\right\}$.
+        \item For each point $p \in A$
+        \begin{itemize}
+            \item Discretize $p$ in space. Choose $x = (x_1, x_2, ..., x_n)$ where
+                    $x_i = \lfloor p_i / \varepsilon\rfloor \in \mathbb{Z}$.
+            \item Hash $x$ into $X$. That is, let $X = X \bigcup \left\{x\right\}$. This
+                    is an $O(1)$ operation for a \emph{hash set}.
+        \end{itemize}
+        \item Return $|X|$.
+    \end{enumerate}
+\end{description}
+
+It is easy to demonstrate that this algorithm runs in $O(|A|)$ time and consumes
+$O(|A|)$ memory. This is a vast improvement over the naive algorithm, which is
+$O(m^n)$ in running time and memory (where $m$ is the number of cells on a side
+in the grid). By using a hash set instead of a large matrix, I can let $\varepsilon$
+go as small as necessary, down to machine $\varepsilon$ without being concerned 
+with running time or memory constraints. As an added bonus, \textsc{Hashed Box 
+Counting} is trivially parallelizable. Note that one needs a number of estimates 
+for $N(\varepsilon)$ for various $\varepsilon$ before one can estimate the 
+capacity dimension $d_{cap}$. Since the resource constraints of \textsc{Hashed 
+Box Counting} are relatively light, one can use a parallel map such as the one
+found in Python's \texttt{multiprocessing.Pool} class to divide the work between
+any number of simultaneous processes. I was able to map a vector of various
+$\varepsilon$ to the corresponding $N(\varepsilon)$ across 8 simultaneous 
+processes on 8 virtual CPU cores, which sped up the calculation significantly.
+
+\section*{2. Capacity Dimension from Experimental Data}
+\subsection*{a. Lorenz Attractor}
+
+Running my program on the embedded Lorenz attractor from PS9 gave 
+$d_{cap} = 1.580324$. The results are shown in Figure 1.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps10_2a.png}
+\\
+Figure 1: Capacity dimension for the embedded Lorenz attractor.
+\end{center}
+
+Note that this plot and capacity dimension were generated using the zeroth and 
+fifth columns of the embedding. These are the same columns that I used to render 
+Figure 6 in PS9. As part of this experiment, I also computed the capacity 
+dimension using the raw, three-dimensional attractor as well as the full
+seven-dimensional embedding. Computing $d_{cap}$ directly on the attractor gave
+a result of approximately 1.81. This suggests that some dimensionality might be
+lost as a result of the embedding process. Computing $d_{cap}$ for all seven
+dimensions of the embedding gave a rounded curve, suggesting $d_{cap}$ could
+potentially vary between around 3.8 and 0.8. Clearly these results are incorrect.
+The true dynamics of the system fit comfortably inside three dimensions, so 3.8
+is too high. And points move along a smooth trajectory, so 0.8 is too low. 
+Intuitively, $d_{cap} \geq 1$. The results for the seven-dimensional embedding
+should not be trusted.
+
+\subsection*{b. Pendulum Trajectory}
+
+I ran my program on \texttt{data2.first250sec} and computed $d_{cap}$ to be
+1.918376. Figure 2 shows the results.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps10_2b.png}
+\\
+Figure 2: Capacity dimension for 250 seconds of an embedded pendulum.
+\end{center}
+
+This result is higher than the result for the Lorenz attractor, which suggests
+that the dimensionality of the pendulum is somehow higher or the variables in
+the pendulum equation are more independent of each other. In terms of time and
+memory demands, this run and the Lorenz calculation each took about 15 seconds
+of CPU time and roughly 400 MB of memory in nine processes. For a Python program
+running on modern hardware this is not a problem.
+
+\subsection*{c. Longer Pendulum Trajectory}
+
+
+
+\end{document}

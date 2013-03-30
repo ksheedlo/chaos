@@ -145,3 +145,40 @@ def embedded(vs, xdim, ydim, *args, **kwargs):
     rfunc = render if 'xbound' in kwargs else mod2pi
     plot_args = (xs, ys) + tuple(args)
     rfunc(*plot_args, **kwargs)
+
+def loglog(*args, **kwargs):
+    '''
+    Renders a 2D log-log plot.
+
+    All the same options and kwargs as plot.render are supported.
+    '''
+    figure = matplotlib.pyplot.figure()
+    axes = figure.gca()
+    opt_actions = (
+        ('title', axes.set_title),
+        ('xlabel', axes.set_xlabel),
+        ('ylabel', axes.set_ylabel),
+        ('xticks', axes.set_xticks),
+        ('yticks', axes.set_yticks),
+        ('xticklabels', axes.set_xticklabels),
+        ('yticklabels', axes.set_yticklabels),
+        ('aspect', axes.set_aspect),
+        ('xbound', lambda (x1, x2): axes.set_xbound(x1, x2)),
+        ('ybound', lambda (y1, y2): axes.set_ybound(y1, y2)),
+        ('file_prefix', lambda _: None),
+        ('ax_callback', lambda _: None),
+    )
+    opts, plot_args = utils.split_dict([name for (name, _) in opt_actions], kwargs)
+
+    if 'ax_callback' in opts:
+        opts['ax_callback'](axes) 
+    else:
+        axes.loglog(*args, **plot_args)
+
+    # Use tuples instead of a dict because order matters. Want to set xticks
+    # before xlabels, etc.
+    for (name, action) in opt_actions:
+        if name in opts:
+            action(opts[name])
+
+    _render_to_output(figure, opts.get('file_prefix'))
