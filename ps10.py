@@ -76,25 +76,27 @@ def pr2a(file_prefix=None):
     x0 = numpy.array([-35, -35], dtype=numpy.float64)
     zs = numpy.array(zip(ws[100000:,0], ws[100000:,5]), dtype=numpy.float64)
     d_cap = find_loglog_slope(zs, x0, file_prefix=suffixed(file_prefix, '_2a'))
-    print 'Lorenz d_cap = {0:.6f}'.format(d_cap)
+    print 'Lorenz\tembed\td_cap = {0:.6f}'.format(d_cap)
 
 def pr2b(file_prefix=None):
-    data = numpy.loadtxt('data/ps8/data2.first250sec', dtype=numpy.float64)
-    vs = tispy.delay('-d', 155, '-m', 8, input=data)
-    xs = numpy.array(zip([mod2pi(v) for v in vs[:,0]], [mod2pi(v) for v in vs[:,2]]), 
-            dtype=numpy.float64)
-    x0 = numpy.array([0] * 2, dtype=numpy.float64)
-    d_cap = find_loglog_slope(xs, x0, file_prefix=suffixed(file_prefix, '_2b'))
-    print 'd_cap = {0:.6f}'.format(d_cap)
+    lfunc = lorenz.lorenz(16, 45, 4)
+    ts, xxs = rungekutta.rk4(
+                            lfunc,
+                            0.0,
+                            numpy.array([-13.0, -12.0, 52.0], dtype=numpy.float64),
+                            0.0001,
+                            1000000
+                        )
+    xs = xxs.transpose()
+    x0 = numpy.array([-30, -40, 4], dtype=numpy.float64)
+    d_cap = find_loglog_slope(xs[100000:400000,:], x0, file_prefix=suffixed(file_prefix, '_2b'))
+    print 'Lorenz\tshort\td_cap = {0:.6f}'.format(d_cap)
+    return xs 
 
-def pr2c(file_prefix=None):
-    data = numpy.loadtxt('data/ps8/data2', dtype=numpy.float64)
-    vs = tispy.delay('-d', 155, '-m', 8, input=data)
-    xs = numpy.array(zip([mod2pi(v) for v in vs[:,0]], [mod2pi(v) for v in vs[:,2]]), 
-            dtype=numpy.float64)
-    x0 = numpy.array([0] * 2, dtype=numpy.float64)
-    d_cap = find_loglog_slope(xs, x0, file_prefix=suffixed(file_prefix, '_2c'))
-    print 'd_cap = {0:.6f}'.format(d_cap)
+def pr2c(xs, file_prefix=None):
+    x0 = numpy.array([-30, -40, 4], dtype=numpy.float64)
+    d_cap = find_loglog_slope(xs[100000:,:], x0, file_prefix=suffixed(file_prefix, '_2c'))
+    print 'Lorenz\tlong\td_cap = {0:.6f}'.format(d_cap)
 
 def extrema():
     lfunc = lorenz.lorenz(16, 45, 4)
@@ -136,8 +138,9 @@ def main(argv=None):
         return 2
 
     # pr2a(file_prefix=file_prefix)
-    pr2b(file_prefix=file_prefix)
-    pr2c(file_prefix=file_prefix)
+    # pr2b(file_prefix=file_prefix)
+    # pr2c(file_prefix=file_prefix)
+    pr2c(pr2b(file_prefix=file_prefix), file_prefix=file_prefix)
 
     return 0
 

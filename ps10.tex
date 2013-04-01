@@ -43,18 +43,18 @@ $O(|A|)$ memory. This is a vast improvement over the naive algorithm, which is
 $O(m^n)$ in running time and memory (where $m$ is the number of cells on a side
 in the grid). By using a hash set instead of a large matrix, I can let $\varepsilon$
 go as small as necessary, down to machine $\varepsilon$ without being concerned 
-with running time or memory constraints. As an added bonus, \textsc{Hashed Box 
-Counting} is trivially parallelizable. Note that one needs a number of estimates 
+with running time or memory constraints. As an added bonus, hashed box 
+counting is trivially parallelizable. Note that one needs a number of estimates 
 for $N(\varepsilon)$ for various $\varepsilon$ before one can estimate the 
-capacity dimension $d_{cap}$. Since the resource constraints of \textsc{Hashed 
-Box Counting} are relatively light, one can use a parallel map such as the one
+capacity dimension $d_{cap}$. Since the resource constraints of hashed 
+box counting are relatively light, one can use a parallel map such as the one
 found in Python's \texttt{multiprocessing.Pool} class to divide the work between
 any number of simultaneous processes. I was able to map a vector of various
 $\varepsilon$ to the corresponding $N(\varepsilon)$ across 8 simultaneous 
 processes on 8 virtual CPU cores, which sped up the calculation significantly.
 
 \section*{2. Capacity Dimension from Experimental Data}
-\subsection*{a. Lorenz Attractor}
+\subsection*{a. Embedded Lorenz Attractor}
 
 Running my program on the embedded Lorenz attractor from PS9 gave 
 $d_{cap} = 1.580324$. The results are shown in Figure 1.
@@ -67,38 +67,69 @@ Figure 1: Capacity dimension for the embedded Lorenz attractor.
 
 Note that this plot and capacity dimension were generated using the zeroth and 
 fifth columns of the embedding. These are the same columns that I used to render 
-Figure 6 in PS9. As part of this experiment, I also computed the capacity 
-dimension using the raw, three-dimensional attractor as well as the full
-seven-dimensional embedding. Computing $d_{cap}$ directly on the attractor gave
-a result of approximately 1.81. This suggests that some dimensionality might be
-lost as a result of the embedding process. Computing $d_{cap}$ for all seven
-dimensions of the embedding gave a rounded curve, suggesting $d_{cap}$ could
-potentially vary between around 3.8 and 0.8. Clearly these results are incorrect.
-The true dynamics of the system fit comfortably inside three dimensions, so 3.8
-is too high. And points move along a smooth trajectory, so 0.8 is too low. 
-Intuitively, $d_{cap} \geq 1$. The results for the seven-dimensional embedding
-should not be trusted.
+Figure 6 in PS9. To compute the capacity dimension, I plotted $N(\varepsilon)$
+for $\varepsilon$ in powers of 2 from $2^{10}$ to $2^{-18}$. I then chose a 
+lower scaling bound of 0.08 and an upper scaling bound of 0.8, and took the 
+linear regression of $\log N(\varepsilon)$ versus $\log\varepsilon$ inside the
+scaling region. The regression gives 
+$\log N(\varepsilon) = d_{cap}\log\varepsilon + c$, where c is a constant factor.
 
-\subsection*{b. Pendulum Trajectory}
+\subsection*{b. Actual Lorenz Attractor}
 
-I ran my program on \texttt{data2.first250sec} and computed $d_{cap}$ to be
-1.918376. Figure 2 shows the results.
+I ran my program on the original trajectory that I used to produce the embedding
+and computed $d_{cap}$ to be 1.796762. For this calculation, I parameterized the 
+Lorenz system with $a = 16$, $r = 45$, $b = 4$ and took 400,000 steps of RK4 with
+$h = 0.0001$. I threw away the first 100,000 steps to make sure the transient 
+would not throw off the result. Figure 2 shows the results.
 
 \begin{center}
 \includegraphics[scale=0.6]{ps10_2b.png}
 \\
-Figure 2: Capacity dimension for 250 seconds of an embedded pendulum.
+Figure 2: Capacity dimension for the original trajectory.
 \end{center}
 
-This result is higher than the result for the Lorenz attractor, which suggests
-that the dimensionality of the pendulum is somehow higher or the variables in
-the pendulum equation are more independent of each other. In terms of time and
-memory demands, this run and the Lorenz calculation each took about 15 seconds
-of CPU time and roughly 400 MB of memory in nine processes. For a Python program
-running on modern hardware this is not a problem.
+This result is significantly higher than the result from part (a), suggesting 
+that some dimensionality may have been lost in the embedding. It is not surprising 
+that the capacity dimension could appear lower while running on a two-dimensional 
+projection because some points that are not close together on the actual 
+three-dimensional attractor could appear close together on the projection. In 
+terms of running time and memory constraints, each calculation took about 10
+seconds in real time, or 80 seconds of CPU time. The calculation for the embedding
+took around 300 MB of memory, and the calculation for the original trajectory took
+approximately 1 GB across all 9 processes. The apparently high memory usage can
+be explained by Python's multiprocessing model, which has to fork off new 
+processes to achieve parallelism instead of using shared memory and threads. 
+Memory usage was higher for the original trajectory because I precomputed 
+1,000,000 timesteps of Runge-Kutta for the following calculation. If I had not
+done this, memory usage would be about the same for the embedding and the 
+original. 
 
-\subsection*{c. Longer Pendulum Trajectory}
+\subsection*{c. Longer Lorenz Trajectory}
 
+For this calculation, I used a longer trajectory. I took 1,000,000 steps of 
+Runge-Kutta and found $d_{cap} = 1.842249$. As in part (b), I threw away the 
+first 100,000 steps so the transient would not have a significant effect on the
+calculation. The results are shown in Figure 3.
 
+\begin{center}
+\includegraphics[scale=0.6]{ps10_2c.png}
+\\
+Figure 3: Capacity dimension for a longer trajectory.
+\end{center}
+
+The results are somewhat higher than the results from the shorter run. The result
+from the longer run is more accurate because the longer run is a better 
+approximation of the real attractor than the shorter run. A cross section of the 
+longer run will more closely resemble the Cantor-like structure we expect to see
+in the real attractor. In comparision, a cross section of the shorter run will be 
+less filled out. 
+
+\section*{3. Thought Experiments}
+
+As previously discussed, hashed box counting is already a significant 
+improvement over naive box counting. In fact, hashed box counting
+is optimal in running time. Notice that an algorithm that attempts to characterize
+the shape of an attractor must consider each point on the attractor. So an 
+algorithm for finding $N(\varepsilon)$ must run in $O(|A|)$ time or longer.
 
 \end{document}
