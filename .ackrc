@@ -1,0 +1,5 @@
+--ignore-dir=python_env
+--ignore-dir=data
+--type-set=junk=.pdf,.aux,.log,.pyc,.dat
+--nojunk
+--follow
