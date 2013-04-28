@@ -1,0 +1,60 @@
+\documentclass[12pt, letterpaper]{article}
+\title{Problem Set 12: Two-Body Problem}
+\author{Ken Sheedlo}
+\usepackage[pdftex]{graphicx}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+\maketitle{}
+
+To demonstrate a gravitational system with two bodies, I first wrote down the
+differential equations for the two-body problem.
+
+\begin{equation}
+\dot{\vec{r_1}} = \vec{v_1}
+\end{equation}
+\begin{equation}
+\dot{\vec{v_1}} = -Gm_2\frac{\vec{r_1}-\vec{r_2}}{|\vec{r_1}-\vec{r_2}|^3}
+\end{equation}
+\begin{equation}
+\dot{\vec{r_2}} = \vec{v_2}
+\end{equation}
+\begin{equation}
+\dot{\vec{v_2}} = -Gm_1\frac{\vec{r_2}-\vec{r_1}}{|\vec{r_2}-\vec{r_1}|^3}
+\end{equation}
+
+I expressed this as a single vector equation in my program code, and it was 
+ready to run simulations inside of RK4. 
+
+I plotted the simulation using initial values $\vec{r_1} = \vec{0}, \vec{v_1} = 
+\vec{0}, \vec{r_2} = \left<1, 0, 0\right>$, and $\vec{v_2} = \left<0, 1, 
+0\right>$. These are the values for the speed and velocity I found in problem set 
+11. I used a gravitational constant $G=1.0$, and gave each star a mass of 0.5. 
+By analysis, I found the period of one orbit to be $2\pi$, so I chose $\Delta t
+=0.005$ and ran the simulation for 7600 timesteps. This worked out to be 
+approximately 1256 timesteps per orbit period for just over 6 orbits. The results 
+are shown in Figure 1.
+
+\newpage
+
+\begin{center}
+\includegraphics[scale=0.6]{ps12.png}
+\\
+Figure 1: Simulated trajectory of two stars in orbit around one another.
+\end{center}
+
+The binary system does indeed orbit properly. I predicted that just over 6 orbits
+would run, and the plot agrees with the prediction. The visual results are 
+somewhat counterintuitive. Instead of an elliptical orbit, we see two cycloids 
+offset. What is going on here is that the two stars are indeed orbiting around 
+each other with eccentricity $e=0$. The center of mass of the system is moving in 
+the $+y$ direction at a constant velocity. Conservation of momentum implies this, 
+as star B is moving in the $+y$ direction while star A is at rest at $t=0$. 
+Superimposing the motion of the center of mass on top of the motion of the stars 
+around each other creates the cycloid. 
+
+\end{document}
