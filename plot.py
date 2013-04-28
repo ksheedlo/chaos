@@ -50,6 +50,7 @@ def render(*args, **kwargs):
         ('aspect', axes.set_aspect),
         ('xbound', lambda (x1, x2): axes.set_xbound(x1, x2)),
         ('ybound', lambda (y1, y2): axes.set_ybound(y1, y2)),
+        ('legend', axes.legend),
         ('file_prefix', lambda _: None),
         ('ax_callback', lambda _: None),
     )
