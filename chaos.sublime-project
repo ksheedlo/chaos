@@ -14,6 +14,13 @@
 	},
 	"build_systems":
 	[
+		{
+			"name": "LaTeX",
+			"path": "/Users/ken/.cabal/bin:./node_modules/.bin:/Users/ken/.rvm/gems/ruby-2.0.0-p0/bin:/Users/ken/.rvm/gems/ruby-2.0.0-p0@global/bin:/Users/ken/.rvm/rubies/ruby-2.0.0-p0/bin:/Users/ken/.rvm/bin:/opt/local/lib/mysql5/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:/usr/texbin:/Users/ken/.gem/ruby/1.8/bin:/opt/nginx/sbin",
+			"cmd": ["make"],
+			"working_dir": "$project_path"
+
+		}
 	],
 	"sublimelinter": false
 }
