@@ -45,3 +45,7 @@ python_env/
 *.log
 *.pdf
 *.png
+
+# OSX crap
+.DS_Store
+
