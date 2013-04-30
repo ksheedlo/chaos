@@ -1,0 +1,85 @@
+\documentclass[12pt, letterpaper]{article}
+\title{Problem Set 13: Three-Body Dynamics}
+\author{Ken Sheedlo}
+\usepackage[pdftex]{graphicx}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{verbatim}
+\usepackage{amsfonts}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+\maketitle{}
+
+\section*{Three-Body Implementation and Testing}
+
+Adding a third body to my equation from Problem Set 12 was relatively 
+straightforward. To test the new system, I constructed the old two-body system
+along with a field star 3000 units away along the positive $y$-axis. Figure 1
+shows the results in a space-fixed reference frame as well as in a frame with
+star A at the origin.
+
+\begin{center}
+\begin{minipage}[t]{0.49\textwidth}
+\includegraphics[scale=0.5]{ps13_1a_cropped.png}
+\end{minipage}
+\begin{minipage}[t]{0.49\textwidth}
+\includegraphics[scale=0.5]{ps13_1b_cropped.png}
+\end{minipage}
+\\
+Figure 1: Orbital dynamics of a binary with a distant field star.
+\end{center}
+
+Note that the field star is not shown in the plot. This was done to better 
+demonstrate the dynamics of the binary. The plots clearly show that the field
+star 3000 units away has no noticeable effect on the dynamics of the binary. 
+
+\section*{Three-Body Orbital Interaction}
+
+For the first real example of a three-body orbital interaction, I set Stars A
+and B in the same orientation and initial velocity as before, and placed the
+field star C at $\left<0, 20, 0\right>$ with velocity $\left<0, -0.15,
+0\right>$. Figure 2 plots the interaction in a space-fixed reference frame.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps13_2a.png}
+\\
+Figure 2: Three-body stellar collision.
+\end{center}
+
+The stars appear to pass quite close together in this collision. Following the
+collision, they are flung apart in different directions. The binary is separated
+and no new capture occurs. This result does not resemble Hut and Bahcall's plot,
+and it should not resemble their plot. Hut and Bahcall used a frame of reference
+that was fixed to the center of mass of the system, while I used a reference
+frame that is fixed in space. Further, Hut and Bahcall's result has star B
+ejected from the binary while star C is captured, forming a new binary with star
+A. So the results are topologically different.
+
+\section*{Changing the True Anomaly}
+
+Increasing the distance of the field star gradually, I found a number of
+scenarios where star A is ejected and stars B and C form a new binary. I will
+describe the distance of the field star as $x_{14}$ because the position in the
+y direction of star C is the fourteenth component of the state vector in my
+simulation. Stars B and C formed a new binary and ejected A for values of
+$x_{14}$ between 20.3 and 21.2. For $x_{14} = 21.5$, I found a trajectory where
+A and C form a new binary and B is ejected. This trajectory is at least
+topologically similar, if not topologically identical, to the trajectory that
+Hut and Bahcall found. The trajectory is shown in Figure 3.
+
+\begin{center}
+\includegraphics[scale=0.6]{ps13_3f.png}
+\\
+Figure 3: Stellar collision similar to Hut and Bahcall's result.
+\end{center}
+
+Note that the plot is still in a space fixed reference frame and so it's
+difficult to tell whether or not one is looking at the same trajectory as Hut
+and Bahcall had.
+
+For $x_{14} = 21.8$, I found star B to stop in the center while stars A and C
+were flung outwards at great speed, and for $x_{14} = 22.1$ I found a trajectory
+where the stars diverge outward similar to the one shown in Figure 2.
+
+\end{document}
